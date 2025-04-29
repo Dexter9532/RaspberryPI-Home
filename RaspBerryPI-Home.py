@@ -19,11 +19,11 @@ def speak(text):
 
 def listen():
     try:
-        mic = sr.Microphone(device_index=2)  # Justera om nödvändigt
+        mic = sr.Microphone(device_index=2)
         with mic as source:
             print("Lyssnar...")
             r.adjust_for_ambient_noise(source)
-            audio = r.listen(source)
+            audio = r.listen(source, timeout=5, phrase_time_limit=5)  # ← lägg till dessa
 
         text = r.recognize_google(audio, language="en-US")
         print("Du sa:", text)

@@ -34,23 +34,37 @@ def listen():
         return ""
 
 while True:
-	if neokey[1]:
-		print("Knapp 0 tryckt - lyssnar...")
-        	command = listen()
+    # Läser av alla knappar
+    buttons = [neokey[i] for i in range(4)]
 
+    # Hantera LED för alla knappar
+    for i in range(4):
+        if buttons[i]:
+            neokey.pixels[i] = (255, 80, 0)  # Exempel: orange när nedtryckt
+        else:
+            neokey.pixels[i] = (0, 0, 0)     # Släck LED annars
+
+    # Nu kan vi hantera kommandon separat
+    if buttons[1]:  # Knapp 1 tryckt
+        print("Knapp 1 tryckt - lyssnar...")
+        command = listen()
 
         if "date" in command:
-        	speak("Today's date is: " + command)
+            date = os.popen("date").read().strip()
+            speak(f"Today's date is: {date}")
 
-        elif "Hello" in command:
-		speak("Hello Sir Bobo")
+        elif "hello" in command:
+            speak("Hello Sir Bobo")
 
-elif neokey[2]:
-            speak("Working")
+        elif "working" in command:
+            speak("Working perfectly!")
 
-        neokey.pixels[1] = (255, 80, 0)
+        time.sleep(1)  # Vänta lite så vi inte lyssnar flera gånger direkt
 
-    else:
-        neokey.pixels[1] = (0, 0, 0)
+    if buttons[2]:  # Knapp 2 tryckt
+        print("Knapp 2 tryckt - säger hejdå...")
+        speak("Goodbye Sir Bobo")
+        time.sleep(1)
 
     time.sleep(0.1)
+

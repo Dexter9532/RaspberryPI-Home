@@ -1,0 +1,10 @@
+#close script
+ps aux | grep voice_recognition.py
+
+#kill
+kill id for command above
+
+
+#start script
+nohup python3 /home/bobo/projects/raspberrypihome/voice_recognition.py &
+

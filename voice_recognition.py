@@ -13,29 +13,29 @@ def listen():
         mic = sr.Microphone(device_index=2)  # OBS: justera index om det inte är 2
 
         with mic as source:
-            print("🎤 Lyssnar nu...")
+            print(" Lyssnar nu...")
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
 
-        print("🟢 Ljud fångat, tolkar...")
+        print(" Ljud fångat, tolkar...")
         text = r.recognize_google(audio, language="en-US")
-        print("✅ Du sa:", text)
+        print(" Du sa:", text)
         return text.lower()
 
     except sr.UnknownValueError:
-        print("❌ Kunde inte förstå.")
+        print(" Kunde inte förstå.")
         return ""
     except sr.RequestError:
-        print("❌ Nätverksfel.")
+        print(" Nätverksfel.")
         return ""
     except AssertionError as e:
-        print(f"❗ Fel i mikrofonhantering: {e}")
+        print(f" Fel i mikrofonhantering: {e}")
         return ""
     except AttributeError as e:
-        print(f"❗ Mikrofonen verkar inte ge en ljudström: {e}")
+        print(f" Mikrofonen verkar inte ge en ljudström: {e}")
         return ""
 
-# 🔁 Lyssnar hela tiden efter kommandon
+# Lyssnar hela tiden efter kommandon
 while True:
     command = listen()
 

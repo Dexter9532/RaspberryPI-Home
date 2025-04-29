@@ -23,7 +23,8 @@ def listen():
         with mic as source:
             print("Lyssnar...")
             r.adjust_for_ambient_noise(source)
-            audio = r.listen(source, timeout=5, phrase_time_limit=5)  # ← lägg till dessa
+            time.sleep(0.5)  # LÅT MIKROFONEN STABILISERA SIG
+            audio = r.listen(source)
 
         text = r.recognize_google(audio, language="en-US")
         print("Du sa:", text)

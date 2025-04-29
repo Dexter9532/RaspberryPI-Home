@@ -6,5 +6,4 @@ kill id for command above
 
 
 #start script
-nohup python3 /home/bobo/projects/raspberrypihome/voice_recognition.py &
-
+nohup python3 /home/bobo/projects/raspberrypihome/RaspBerryPI-Home.py &

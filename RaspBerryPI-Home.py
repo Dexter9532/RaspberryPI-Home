@@ -48,6 +48,7 @@ while True:
     if buttons[1]:  # Knapp 1 tryckt
         print("Knapp 1 tryckt - lyssnar...")
         command = listen()
+	print("Tolkad text:", command)
 
         if "date" in command:
             date = os.popen("date").read().strip()
@@ -62,7 +63,6 @@ while True:
         time.sleep(1)  # Vänta lite så vi inte lyssnar flera gånger direkt
 
     if buttons[2]:  # Knapp 2 tryckt
-        print("Knapp 2 tryckt - säger hejdå...")
         speak("Goodbye Sir Bobo")
         time.sleep(1)
 

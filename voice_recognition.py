@@ -1,6 +1,15 @@
 import speech_recognition as sr
 import time
 import os
+import board
+import busio
+from adafruit_tca9548a import TCA9548A
+from adafruit_neokey.neokey1x4 import NeoKey1x4
+
+# Skapa I2C-buss och initiera NeoKey
+i2c = busio.I2C(board.SCL, board.SDA)
+tca = TCA9548A(i2c)
+neokey = NeoKey1x4(tca[0])
 
 r = sr.Recognizer()
 
@@ -10,46 +19,33 @@ def speak(text):
 
 def listen():
     try:
-        mic = sr.Microphone(device_index=2)  # OBS: justera index om det inte är 2
-
+        mic = sr.Microphone(device_index=2)  # Justera om nödvändigt
         with mic as source:
-            print(" Lyssnar nu...")
+            print("Lyssnar...")
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
 
-        print(" Ljud fångat, tolkar...")
         text = r.recognize_google(audio, language="en-US")
-        print(" Du sa:", text)
+        print("Du sa:", text)
         return text.lower()
 
-    except sr.UnknownValueError:
-        print(" Kunde inte förstå.")
-        return ""
-    except sr.RequestError:
-        print(" Nätverksfel.")
-        return ""
-    except AssertionError as e:
-        print(f" Fel i mikrofonhantering: {e}")
-        return ""
-    except AttributeError as e:
-        print(f" Mikrofonen verkar inte ge en ljudström: {e}")
+    except (sr.UnknownValueError, sr.RequestError, AssertionError, AttributeError) as e:
+        print(f"Fel vid lyssning: {e}")
         return ""
 
-# Lyssnar hela tiden efter kommandon
 while True:
-    command = listen()
+    if neokey[0]:
+        print("Knapp 0 tryckt - lyssnar...")
+        command = listen()
+        neokey.pixels[0] = (255, 80, 0)
 
-    if "time" in command or "what time is it" in command or "do you know the time" in command:
-        now = time.strftime("%H:%M")
-        speak(f"The time is {now}")
-
-    elif "play sound" in command:
-        os.system("aplay /home/bobo/projects/sound/test.wav")
-        speak("Sound played.")
-
-    elif "shutdown" in command:
-        speak("Shutting down.")
-        os.system("sudo shutdown now")
+        if "date" in command:
+            speak("Today's date is: " + command)
+            
+        elif "Hello" in command:
+            speak("Hello Sir Bobo")
 
     else:
-        print("Inget kommando hittades.")
+        neokey.pixels[0] = (0, 0, 0)
+
+    time.sleep(0.1)

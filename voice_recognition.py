@@ -34,17 +34,22 @@ def listen():
         return ""
 
 while True:
-    if neokey[0]:
+    if neokey[1]:
         print("Knapp 0 tryckt - lyssnar...")
         command = listen()
-        neokey.pixels[0] = (255, 80, 0)
+        
 
         if "date" in command:
             speak("Today's date is: " + command)
-            
+
         elif "Hello" in command:
             speak("Hello Sir Bobo")
 
+        elif neokey[2]:
+            speak("Working")
+            
+        neokey.pixels[0] = (255, 80, 0)
+        
     else:
         neokey.pixels[0] = (0, 0, 0)
 

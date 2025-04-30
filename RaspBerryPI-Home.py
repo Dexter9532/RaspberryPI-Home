@@ -1,4 +1,3 @@
-import speech_recognition as sr
 import time
 import os
 import board
@@ -6,33 +5,33 @@ import busio
 from adafruit_tca9548a import TCA9548A
 from adafruit_neokey.neokey1x4 import NeoKey1x4
 
+from vosk import Model, KaldiRecognizer
+import sounddevice as sd
+import json
+
 # Skapa I2C-buss och initiera NeoKey
 i2c = busio.I2C(board.SCL, board.SDA)
 tca = TCA9548A(i2c)
 neokey = NeoKey1x4(tca[0])
 
-r = sr.Recognizer()
+# Initiera Vosk-modellen
+model = Model("/home/bobo/models/vosk-model-small-en-us-0.15")
+recognizer = KaldiRecognizer(model, 16000)
 
 def speak(text):
     print("Svarar:", text)
     os.system(f'espeak "{text}"')
 
 def listen():
-    try:
-        mic = sr.Microphone(device_index=2)
-        with mic as source:
-            print("Lyssnar...")
-            r.adjust_for_ambient_noise(source)
-            time.sleep(0.5)  # LÅT MIKROFONEN STABILISERA SIG
-            audio = r.listen(source)
-
-        text = r.recognize_google(audio, language="en-US")
-        print("Du sa:", text)
-        return text.lower()
-
-    except (sr.UnknownValueError, sr.RequestError, AssertionError, AttributeError) as e:
-        print(f"Fel vid lyssning: {e}")
-        return ""
+    print("Lyssnar...")
+    with sd.RawInputStream(samplerate=16000, blocksize=8000, dtype='int16',
+                           channels=1) as stream:
+        while True:
+            data = stream.read(4000)[0]
+            if recognizer.AcceptWaveform(data):
+                result = recognizer.Result()
+                text = json.loads(result).get("text", "")
+                return text.lower()
 
 while True:
     # Läser av alla knappar
@@ -41,12 +40,12 @@ while True:
     # Hantera LED för alla knappar
     for i in range(4):
         if buttons[i]:
-            neokey.pixels[i] = (255, 80, 0)  # Exempel: orange när nedtryckt
+            neokey.pixels[i] = (255, 80, 0)  # Orange när nedtryckt
         else:
-            neokey.pixels[i] = (0, 0, 0)     # Släck LED annars
+            neokey.pixels[i] = (0, 0, 0)
 
-    # Nu kan vi hantera kommandon separat
-    if buttons[1]:  # Knapp 1 tryckt
+    # Hantera taligenkänning via knapp 1
+    if buttons[1]:
         print("Knapp 1 tryckt - lyssnar...")
         command = listen()
         print("Tolkad text:", command)
@@ -61,11 +60,11 @@ while True:
         elif "working" in command:
             speak("Working perfectly!")
 
-        time.sleep(1)  # Vänta lite så vi inte lyssnar flera gånger direkt
+        time.sleep(1)
 
-    if buttons[2]:  # Knapp 2 tryckt
+    # Knapp 2 = Avslutningsmeddelande
+    if buttons[2]:
         speak("Goodbye Sir Bobo")
         time.sleep(1)
 
     time.sleep(0.1)
-

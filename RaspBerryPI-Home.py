@@ -19,8 +19,9 @@ model = Model("/home/bobo/downloads/models/vosk-model-small-en-us-0.15")
 recognizer = KaldiRecognizer(model, 16000)
 
 def speak(text):
-    print("Svarar:", text)
-    os.system(f'espeak "{text}"')
+    clean_text = text.strip().replace("\n", "").replace("\r", "") 
+    print("Svarar:", clean_text)
+    os.system(f'espeak "{clean_text}" 2>/dev/null')
 
 def listen():
     print("Lyssnar...")
@@ -51,7 +52,7 @@ while True:
         print("Tolkad text:", command)
 
         if "date" in command:
-            date = os.popen("date").read().strip()
+            date = time.strftime("%A, %d %B")
             speak(f"Today's date is: {date}")
 
         elif "hello" in command:

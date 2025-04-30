@@ -15,7 +15,7 @@ tca = TCA9548A(i2c)
 neokey = NeoKey1x4(tca[0])
 
 # Initiera Vosk-modellen
-model = Model("/home/bobo/models/vosk-model-small-en-us-0.15")
+model = Model("/home/bobo/downloads/models/vosk-model-small-en-us-0.15")
 recognizer = KaldiRecognizer(model, 16000)
 
 def speak(text):
@@ -27,7 +27,7 @@ def listen():
     with sd.RawInputStream(samplerate=16000, blocksize=8000, dtype='int16',
                            channels=1) as stream:
         while True:
-            data = stream.read(4000)[0]
+            data = bytes(stream.read(4000)[0])
             if recognizer.AcceptWaveform(data):
                 result = recognizer.Result()
                 text = json.loads(result).get("text", "")

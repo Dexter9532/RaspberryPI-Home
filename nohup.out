@@ -12986,3 +12986,9 @@ JackShmReadWritePtr::~JackShmReadWritePtr - Init not done for -1, skipping unloc
 JackShmReadWritePtr::~JackShmReadWritePtr - Init not done for -1, skipping unlock
 Expression 'parameters->channelCount <= maxChans' failed in 'src/hostapi/alsa/pa_linux_alsa.c', line: 1514
 Expression 'ValidateParameters( inputParameters, hostApi, StreamDirection_In )' failed in 'src/hostapi/alsa/pa_linux_alsa.c', line: 2818
+  File "/home/bobo/projects/raspberrypihome/RaspBerryPI-Home.py", line 58
+    with open("/media/pi/CIRCUITPY/text.txt", "w") as f:
+TabError: inconsistent use of tabs and spaces in indentation
+  File "/home/bobo/projects/raspberrypihome/RaspBerryPI-Home.py", line 58
+    with open("/media/pi/CIRCUITPY/text.txt", "w") as f:
+TabError: inconsistent use of tabs and spaces in indentation

@@ -55,7 +55,7 @@ while True:
             date = time.strftime("%A, %d %B")
             response = f"Todays date is: {date}"
             speak(response)
-	    with open("/media/pi/CIRCUITPY/text.txt", "w") as f:
+            with open("/media/pi/CIRCUITPY/text.txt", "w") as f:
                  f.write(f"DU: {command}\nSVAR: {response} ")
 
         elif "hello" in command:

@@ -53,10 +53,13 @@ while True:
 
         if "date" in command:
             date = time.strftime("%A, %d %B")
-            response = f"Todays date is: {date}"
+            response = f"Today's date is: {date}"
             speak(response)
-            with open("/media/pi/CIRCUITPY/text.txt", "w") as f:
-                 f.write(f"DU: {command}\nSVAR: {response} ")
+            try:
+                with open("/dev/ttyACM0", "w") as serial:
+                     serial.write(f"DU: {command}\nSVAR: {response}\n")
+            except Exception as e:
+                print("Kunde inte skriva till ESP:", e)
 
         elif "hello" in command:
             speak("Hello Sir Bobo")

@@ -34,6 +34,13 @@ def listen():
                 text = json.loads(result).get("text", "")
                 return text.lower()
 
+def show_display(command, response):
+    try:
+        with open("/dev/ttyACM0", "w") as serial:
+            serial.write(f"DU: {command}\nSVAR: {response}\n")
+    except Exception as e:
+        print("Kunde inte skriva till ESP:", e)
+
 while True:
     # Läser av alla knappar
     buttons = [neokey[i] for i in range(4)]
@@ -45,6 +52,12 @@ while True:
         else:
             neokey.pixels[i] = (0, 0, 0)
 
+    # Idle Läge
+    if buttons[0]
+        try:
+            with open("/dev/ttyACM0", "w") as serial:
+                 serial.write(f"Hello Sir Bobo - RaspberryPi-Home")
+
     # Hantera taligenkänning via knapp 1
     if buttons[1]:
         print("Knapp 1 tryckt - lyssnar...")
@@ -55,11 +68,7 @@ while True:
             date = time.strftime("%A, %d %B")
             response = f"Today's date is: {date}"
             speak(response)
-            try:
-                with open("/dev/ttyACM0", "w") as serial:
-                     serial.write(f"DU: {command}\nSVAR: {response}\n")
-            except Exception as e:
-                print("Kunde inte skriva till ESP:", e)
+            show_display(command, response)
 
         elif "hello" in command:
             speak("Hello Sir Bobo")

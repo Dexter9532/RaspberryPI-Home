@@ -34,10 +34,10 @@ def listen():
                 text = json.loads(result).get("text", "")
                 return text.lower()
 
-def show_display(command, response):
+def show_display():
     try:
         with open("/dev/ttyACM0", "w") as serial:
-            serial.write(f"DU: {command}\nSVAR: {response}\n")
+            serial.write(f"Kommando: {command} | Svar: {response}\n")
     except Exception as e:
         print("Kunde inte skriva till ESP:", e)
 
@@ -56,7 +56,7 @@ while True:
     if buttons[0]:
         try:
             with open("/dev/ttyACM0", "w") as serial:
-                serial.write("Hello Sir Bobo - RaspberryPi-Home\n")
+                serial.write("Hello Sir Bobo   RaspberryPi-Home By BoboINC\n")
         except Exception as e:
             print("Kunde inte skriva idle-text till ESP:", e)
 
@@ -71,7 +71,7 @@ while True:
             date = time.strftime("%A, %d %B")
             response = f"Today's date is: {date}"
             speak(response)
-            show_display(command, response)
+            show_display()
 
         elif "hello" in command:
             speak("Hello Sir Bobo")
@@ -79,11 +79,10 @@ while True:
         elif "working" in command:
             speak("Working perfectly!")
 
-        time.sleep(1)
 
     # Knapp 2 = Avslutningsmeddelande
     if buttons[2]:
         speak("Goodbye Sir Bobo")
         time.sleep(1)
 
-    time.sleep(0.1)
+    time.sleep(0.5)

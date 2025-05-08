@@ -53,10 +53,13 @@ while True:
             neokey.pixels[i] = (0, 0, 0)
 
     # Idle Läge
-    if buttons[0]
+    if buttons[0]:
         try:
             with open("/dev/ttyACM0", "w") as serial:
-                 serial.write(f"Hello Sir Bobo - RaspberryPi-Home")
+                serial.write("Hello Sir Bobo - RaspberryPi-Home\n")
+        except Exception as e:
+            print("Kunde inte skriva idle-text till ESP:", e)
+
 
     # Hantera taligenkänning via knapp 1
     if buttons[1]:
